@@ -1,0 +1,36 @@
+.logger-container {
+  align-items: baseline;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.logger-container button {
+  align-self: flex-end;
+}
+
+.logger {
+  border: 1px solid #ededed;
+  margin-right: 10px;
+  max-height: 200px;
+  min-height: 100px;
+  min-width: 450px;
+  overflow: auto;
+  padding: 10px;
+}
+
+.logger > div {
+  border-bottom: 1px solid #ededed;
+  margin-bottom: 5px;
+  padding: 10px;
+}
+
+.logger > div b{
+  margin-right: 10px;
+}
+
+button {
+  font-size: 13px;
+  margin: 10px 10px 0 0;
+  padding: 10px 20px;
+  text-shadow: 2px 1px 2px rgba(196, 190, 180, 1);
+}

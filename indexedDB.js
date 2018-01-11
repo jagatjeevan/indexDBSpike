@@ -1,7 +1,7 @@
-console.group("Code is written in ES6.");
-  console.log("This code would work in Chrome latest version. Incase you get any error, please try converting es6 to es5 and then run the code.");
-  console.log("Use this url to do so: https://babeljs.io/repl/");
-console.groupEnd();
+// console.group("Code is written in ES6 and no compiler used to transpile as it is just for learning");
+//   console.log("This code would work in Chrome latest version. Incase you get any error, please try converting es6 to es5 and then run the code.");
+//   console.log("Use this url to do so: https://babeljs.io/repl/");
+// console.groupEnd();
 
 let openRequest;
 let databaseName = 'indexedDBSpike';
@@ -17,16 +17,16 @@ let dbConfig = {
     logStatement.updateLogger("Error in ", err);
   },
   setDefaultErrorHandling: (request) => {
-    if("onerror" in request) 
-      request.onerror = db.defaultErrorHandling;
+    if("onerror" in request)
+      request.onerror = dbConfig.defaultErrorHandling;
 
-    if("onblocked" in request) 
-      request.onblocked = db.defaultErrorHandling;
+    if("onblocked" in request)
+      request.onblocked = dbConfig.defaultErrorHandling;
   }
 }
 
 document.querySelector('#createDB').addEventListener('click', () => {
-  openRequest = indexedDB.open(dbConfig.name, dbConfig.version); // we passed the name of the Database.
+  openRequest = indexedDB.open(dbConfig.name, dbConfig.version);
 
   // If indexedDBSpike database is not present, or the version is old, this method would get called.
   openRequest.onupgradeneeded = (e) => {
@@ -39,14 +39,17 @@ document.querySelector('#createDB').addEventListener('click', () => {
     logStatement.updateLogger("Database creating");
 
     // Populate initial data
-    store.put({pipelineName: "PromoFrontend", author: "Jagat"});
+    store.put({
+      pipelineName: "PromoFrontend", 
+      author: "Jagat"
+    });
     store.put({pipelineName: "PromoBackend", author: "Raghavendra"});
     store.put({pipelineName: "PromoSQL", author: "Rajshekhar"});
 
     logStatement.updateLogger("Database created");
   }
 
-  openRequest.success = () => {
+  openRequest.onsuccess = () => {
     dbConfig.instance = openRequest.result;
     logStatement.updateLogger("Database opened");
   }
@@ -76,6 +79,19 @@ document.querySelector('#deleteDB').addEventListener('click', () => {
   }
 });
 
+document.querySelector('#readDB').addEventListener('click', () => {
+  // array of database names
+  let transaction = dbConfig.instance.transaction([dbConfig.storeNames.pipelines], 'readonly');
+  let objectStore = transaction.objectStore(dbConfig.storeNames.pipelines);
+
+  transaction.onsuccess = function(e) {
+    console.log("success", e);
+  }
+
+  console.log("This is the object store to read data from ", objectStore);
+});
+
+// Clear all logs
 document.querySelector('#clear-logger').addEventListener('click', () => {
   logStatement.clearLogger();
 });

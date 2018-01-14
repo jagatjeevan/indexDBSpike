@@ -6,10 +6,14 @@ const config = {
   entry: {
     main: path.resolve(__dirname, "src/js/app")
   },
+
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "app.js"
   },
+
+  devtool: "source-map",
+
   module: {
     rules: [
       {
@@ -22,14 +26,15 @@ const config = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract({
+        use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: ['css-loader', 'sass-loader'],
-          allChunks: false,
-        }),
+          allChunks: false
+        })
       }
     ]
   },
+
   plugins: [
     new ExtractTextPlugin("style.css")
   ]

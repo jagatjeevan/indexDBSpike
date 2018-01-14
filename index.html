@@ -8,14 +8,33 @@
 <body>
 
   <h4>Open dev tools, Get to the "Application" Tab. Under that would be "IndexedDB"</h4>
-  <div class="logger-container">
-    <div id="logger" class="logger"></div>
-    <button id="clear-logger">Clear all logs</button>
-  </div>
+  <div class="container">
+    <form class="menu" type="post" name="addDBForm" action="" onsubmit="return false;">
+      <label for="title" class="form">
+        <span>Title of the book: </span>
+        <input type="text" class="form-input" name="title" />
+      </label>
+      <label for="title" class="form">
+        <span>Author of the book: </span>
+        <input type="text" class="form-input" name="author" />
+      </label>
+      <label for="title" class="form">
+        <span>Type of the book: </span>
+        <input type="text" class="form-input" name="type" />
+      </label>
+      <input type="submit" value="Add to Database" id="addDB" class="addDBButton" />
+    </form>
+    <div class="status">
+      <div class="logger-container">
+        <div id="logger" class="logger"></div>
+        <button id="clear-logger">Clear all logs</button>
+      </div>
 
-  <button id="createDB">Create Database</button>
-  <button id="deleteDB">Delete Database</button>
-  <button id="readDB">Read Database</button>
+      <button id="createDB">Create Database</button>
+      <button id="deleteDB">Delete Database</button>
+      <button id="readDB">Read Database</button>
+    </div>
+  </div>
 
   <script src="dist/app.js"></script>
 

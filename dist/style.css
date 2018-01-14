@@ -1,3 +1,24 @@
+.container {
+  display: flex; }
+
+.menu {
+  width: 50%;
+  margin-right: 30px; }
+  .menu .addDBButton {
+    float: right; }
+
+label.form {
+  display: flex;
+  align-items: center;
+  padding: 10px; }
+
+.form span {
+  width: 200px; }
+
+.form input {
+  width: 100%;
+  padding: 10px; }
+
 .logger-container {
   align-items: baseline;
   display: flex;
@@ -23,8 +44,13 @@
 .logger > div b {
   margin-right: 10px; }
 
-button {
+button,
+input[type="submit"],
+input[type="button"] {
   font-size: 13px;
   margin: 10px 10px 0 0;
   padding: 10px 20px;
-  text-shadow: 2px 1px 2px #c4beb4; }
+  text-shadow: 2px 1px 2px #c4beb4;
+  background: #d8d8d8; }
+
+/*# sourceMappingURL=style.css.map*/

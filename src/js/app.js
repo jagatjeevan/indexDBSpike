@@ -13,14 +13,9 @@ let isDatabasePresent = (openRequest) => {
   return true;
 }
 
-let getDBInstance = () => {
-  openRequest = window.indexedDB.open(dataBaseConfig.databaseName);
-  dataBaseConfig.instance = openRequest.result;
-}
-
 // Create Database
 document.querySelector('#createDB').addEventListener('click', () => {
-  openRequest = window.indexedDB.open(dataBaseConfig.databaseName, dataBaseConfig.version)
+  openRequest = window.indexedDB.open(dataBaseConfig.databaseName, dataBaseConfig.version);
 
   openRequest.onupgradeneeded = (e) => {
     logStatement.updateLogger("Database needs update");
@@ -54,7 +49,7 @@ document.querySelector('#createDB').addEventListener('click', () => {
 
 document.querySelector('#readDB').addEventListener('click', () => {
   // Check if the database is present
-  if (!isDatabasePresent) {
+  if (!isDatabasePresent(openRequest)) {
     return;
   }
 
@@ -80,7 +75,7 @@ document.querySelector('#readDB').addEventListener('click', () => {
 });
 
 document.querySelector('#deleteDB').addEventListener('click', () => {
-  if (!isDatabasePresent) {
+  if (!isDatabasePresent(openRequest)) {
     return;
   }
 
@@ -88,10 +83,13 @@ document.querySelector('#deleteDB').addEventListener('click', () => {
   openRequest.result.close();
   let deleteRequest = indexedDB.deleteDatabase(dataBaseConfig.databaseName);
 
-  deleteRequest.onsuccess = logStatement.updateLogger("Database deleted successfully");
-  
   // OnBlocked for some reason, database could not be deleted
   dataBaseConfig.setDefaultErrorHandling(openRequest);
+
+  deleteRequest.onsuccess = logStatement.updateLogger("Database deleted successfully");
+
+  dataBaseConfig.instance = {};
+  openRequest = undefined;
 
 });
 
@@ -101,6 +99,11 @@ document.querySelector('#clear-logger').addEventListener('click', () => {
 });
 
 document.querySelector('#addDB').addEventListener('click', () => {
+  // Check if the database is present
+  if (!isDatabasePresent(openRequest)) {
+    return;
+  }
+
   logStatement.updateLogger('Database adding started');
   let bookObject = {
     title: document.querySelector('[name="title"]').value,
@@ -111,7 +114,6 @@ document.querySelector('#addDB').addEventListener('click', () => {
   let transaction = dataBaseConfig.instance.transaction([dataBaseConfig.storeNames.books], "readwrite");
   let objectStore = transaction.objectStore("books");
   objectStore.add(bookObject);
-});
 
-// Get the instance of the database if already present
-getDBInstance();
+  logStatement.updateLogger('Database adding completed');
+});

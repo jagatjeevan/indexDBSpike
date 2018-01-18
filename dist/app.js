@@ -83,14 +83,9 @@ let isDatabasePresent = openRequest => {
   if (typeof openRequest === 'undefined') {
     __WEBPACK_IMPORTED_MODULE_1__logger__["b" /* updateLogger */]("Database not present");
     return false;
-  } else {
-    return true;
   }
-};
 
-let getDBInstance = () => {
-  openRequest = window.indexedDB.open(__WEBPACK_IMPORTED_MODULE_0__databaseConfig__["a" /* default */].databaseName);
-  __WEBPACK_IMPORTED_MODULE_0__databaseConfig__["a" /* default */].instance = openRequest.result;
+  return true;
 };
 
 // Create Database
@@ -128,7 +123,7 @@ document.querySelector('#createDB').addEventListener('click', () => {
 
 document.querySelector('#readDB').addEventListener('click', () => {
   // Check if the database is present
-  if (!isDatabasePresent) {
+  if (!isDatabasePresent(openRequest)) {
     return;
   }
 
@@ -153,7 +148,7 @@ document.querySelector('#readDB').addEventListener('click', () => {
 });
 
 document.querySelector('#deleteDB').addEventListener('click', () => {
-  if (!isDatabasePresent) {
+  if (!isDatabasePresent(openRequest)) {
     return;
   }
 
@@ -161,10 +156,13 @@ document.querySelector('#deleteDB').addEventListener('click', () => {
   openRequest.result.close();
   let deleteRequest = indexedDB.deleteDatabase(__WEBPACK_IMPORTED_MODULE_0__databaseConfig__["a" /* default */].databaseName);
 
-  deleteRequest.onsuccess = __WEBPACK_IMPORTED_MODULE_1__logger__["b" /* updateLogger */]("Database deleted successfully");
-
   // OnBlocked for some reason, database could not be deleted
   __WEBPACK_IMPORTED_MODULE_0__databaseConfig__["a" /* default */].setDefaultErrorHandling(openRequest);
+
+  deleteRequest.onsuccess = __WEBPACK_IMPORTED_MODULE_1__logger__["b" /* updateLogger */]("Database deleted successfully");
+
+  __WEBPACK_IMPORTED_MODULE_0__databaseConfig__["a" /* default */].instance = {};
+  openRequest = undefined;
 });
 
 // Clearing the logs from html
@@ -173,6 +171,11 @@ document.querySelector('#clear-logger').addEventListener('click', () => {
 });
 
 document.querySelector('#addDB').addEventListener('click', () => {
+  // Check if the database is present
+  if (!isDatabasePresent(openRequest)) {
+    return;
+  }
+
   __WEBPACK_IMPORTED_MODULE_1__logger__["b" /* updateLogger */]('Database adding started');
   let bookObject = {
     title: document.querySelector('[name="title"]').value,
@@ -183,10 +186,9 @@ document.querySelector('#addDB').addEventListener('click', () => {
   let transaction = __WEBPACK_IMPORTED_MODULE_0__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_0__databaseConfig__["a" /* default */].storeNames.books], "readwrite");
   let objectStore = transaction.objectStore("books");
   objectStore.add(bookObject);
-});
 
-// Get the instance of the database if already present
-getDBInstance();
+  __WEBPACK_IMPORTED_MODULE_1__logger__["b" /* updateLogger */]('Database adding completed');
+});
 
 /***/ }),
 /* 1 */

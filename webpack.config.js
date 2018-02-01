@@ -37,7 +37,12 @@ const config = {
 
   plugins: [
     new ExtractTextPlugin("style.css")
-  ]
+  ],
+
+  devServer: {
+    port: 2000,
+    watchContentBase: true
+  }
 }
 
 module.exports = config;

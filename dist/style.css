@@ -40,9 +40,8 @@ label.form {
   border-bottom: #ededed solid 1px;
   margin-bottom: 5px;
   padding: 10px; }
-
-.logger > div b {
-  margin-right: 10px; }
+  .logger > div b {
+    margin-right: 10px; }
 
 button,
 input[type="submit"],
@@ -52,5 +51,11 @@ input[type="button"] {
   padding: 10px 20px;
   text-shadow: 2px 1px 2px #c4beb4;
   background: #d8d8d8; }
+
+#database-key-container label {
+  background: #d8d8d8;
+  border-radius: 3px;
+  padding: 10px;
+  margin: 10px; }
 
 /*# sourceMappingURL=style.css.map*/

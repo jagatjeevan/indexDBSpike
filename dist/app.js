@@ -2014,7 +2014,7 @@ module.exports = function spread(callback) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-let basePath = window.location.hostname === 'jagatjeevan.github.io/' ? 'indexDBSpike/dist/' : '/';
+let basePath = window.location.hostname === 'jagatjeevan.github.io/' ? '/indexDBSpike/' : '/';
 let apiPath = basePath + 'dist/api/';
 
 const path = {

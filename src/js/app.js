@@ -1,4 +1,5 @@
 import axios from 'axios';
+import path from './path';
 import dataBaseConfig from './databaseConfig';
 import * as logStatement from './logger';
 import '../styles/style.scss';
@@ -168,7 +169,7 @@ let populateDatabase = data => {
 };
 
 document.querySelector('#populateAjax').addEventListener('click', () => {
-  axios.get('api/books.json').then(res => {
+  axios.get(path.apiPath + 'books.json').then(res => {
     console.log("data is ", res.data);
     populateDatabase(res.data);
   });

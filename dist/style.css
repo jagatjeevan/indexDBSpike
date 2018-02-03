@@ -4,8 +4,6 @@
 .menu {
   width: 50%;
   margin-right: 30px; }
-  .menu .addDBButton {
-    float: right; }
 
 label.form {
   display: flex;
@@ -18,6 +16,10 @@ label.form {
 .form input {
   width: 100%;
   padding: 10px; }
+
+.form-action-container {
+  display: flex;
+  justify-content: flex-end; }
 
 .logger-container {
   align-items: baseline;
@@ -45,6 +47,7 @@ label.form {
 
 button,
 input[type="submit"],
+input[type="reset"],
 input[type="button"] {
   font-size: 13px;
   margin: 10px 10px 0 0;

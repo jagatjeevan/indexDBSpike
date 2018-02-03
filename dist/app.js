@@ -949,17 +949,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
 let openRequest;
 
 let isDatabasePresent = openRequest => {
   if (typeof openRequest === 'undefined') {
     __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Database not present");
     return false;
-  }
-
-  if (!__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance.name) {
-    __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance = openRequest.result;
   }
 
   return true;
@@ -993,12 +988,16 @@ document.querySelector('#createDB').addEventListener('click', () => {
     let bookAuthor = store.createIndex("by_author", "author");
     let bookType = store.createIndex("by_type", "type");
 
-    // Adding initial values to the table. You can use "store.put({...})" or "transaction"
-    store.put({
+    let initialDatabaseValue = {
       title: "Merchant of Venice",
       author: "William Shakespear",
       type: "Drama"
-    });
+    };
+
+    // Adding initial values to the table. You can use "store.put({...})" or "transaction"
+    store.put(initialDatabaseValue);
+
+    updateKeyContainer(initialDatabaseValue);
   };
 
   openRequest.onsuccess = e => {
@@ -1019,12 +1018,13 @@ document.querySelector('#readDB').addEventListener('click', () => {
   let objectStore = transaction.objectStore(__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books);
   // Use openCursor to read a stream of data.
   let cursor = objectStore.openCursor();
+  clearKeyContainer();
 
   cursor.onsuccess = e => {
     let result = e.target.result;
     __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Reading Database");
     if (result) {
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Name of the book: " + result.key);
+      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Name of the book: " + result.value.title);
       __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("author of the book: " + result.value.author);
       __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("type of the book: " + result.value.type);
       updateKeyContainer(result.value);
@@ -1057,7 +1057,6 @@ document.querySelector('#deleteDB').addEventListener('click', () => {
 // Clearing the logs from html
 document.querySelector('#clear-logger').addEventListener('click', () => {
   __WEBPACK_IMPORTED_MODULE_2__logger__["a" /* clearLogger */]();
-  clearKeyContainer();
 });
 
 document.querySelector('#addDB').addEventListener('click', () => {
@@ -1076,38 +1075,10 @@ document.querySelector('#addDB').addEventListener('click', () => {
   let transaction = __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books], "readwrite");
   let objectStore = transaction.objectStore("books");
   objectStore.add(bookObject);
+  updateKeyContainer(bookObject);
 
-  transaction.oncomplete = () => {
-    __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]('Database adding completed');
-    updateKeyContainer(bookObject);
-  };
-
-  __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].setDefaultErrorHandling(transaction);
-});
-
-document.querySelector('#readFirstDB').addEventListener('click', () => {
-  // Check if the database is present
-  if (!isDatabasePresent(openRequest)) {
-    return;
-  }
-
-  // Use transaction to read the database
-  let transaction = __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books], "readonly");
-  let objectStore = transaction.objectStore(__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books);
-
-  // openCursor
-  let cursor = objectStore.openCursor();
-  cursor.onsuccess = e => {
-    let result = e.target.result;
-    if (result) {
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("See the console for the object");
-      console.log("first record is ", result.value);
-    } else {
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("did not get anything");
-    }
-  };
-
-  __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].setDefaultErrorHandling(cursor);
+  __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]('Database adding completed');
+  document.forms['addDBForm'].reset();
 });
 
 let populateDatabase = data => {
@@ -1131,7 +1102,7 @@ let populateDatabase = data => {
     objectStore.add(bookObject);
 
     transaction.oncomplete = datum => {
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */](datum.title + ' is added to database');
+      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */](bookObject.title + ' is added to database');
       updateKeyContainer(bookObject);
     };
 
@@ -1140,7 +1111,7 @@ let populateDatabase = data => {
 };
 
 document.querySelector('#populateAjax').addEventListener('click', () => {
-  __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('../api/books.json').then(res => {
+  __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('api/books.json').then(res => {
     console.log("data is ", res.data);
     populateDatabase(res.data);
   });

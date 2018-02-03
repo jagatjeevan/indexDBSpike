@@ -940,10 +940,12 @@ module.exports = Cancel;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__databaseConfig__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logger__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_style_scss__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__styles_style_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__styles_style_scss__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__path__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__databaseConfig__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__logger__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__styles_style_scss__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__styles_style_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__styles_style_scss__);
+
 
 
 
@@ -953,7 +955,7 @@ let openRequest;
 
 let isDatabasePresent = openRequest => {
   if (typeof openRequest === 'undefined') {
-    __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Database not present");
+    __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Database not present");
     return false;
   }
 
@@ -972,16 +974,16 @@ let updateKeyContainer = bookObject => {
 
 // Create Database
 document.querySelector('#createDB').addEventListener('click', () => {
-  openRequest = window.indexedDB.open(__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].databaseName, __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].version);
+  openRequest = window.indexedDB.open(__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].databaseName, __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].version);
 
   openRequest.onupgradeneeded = e => {
-    __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Database needs update");
+    __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Database needs update");
     // Creating a Database instance and storing it to config so that we can use it anywhere.
-    __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance = openRequest.result;
+    __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].instance = openRequest.result;
 
     // Store is mainly the tables in the database. This one would create table with the name books
-    let store = __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance.createObjectStore(__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books, { keyPath: "title" });
-    __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Table created with the name '" + __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books + "'");
+    let store = __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].instance.createObjectStore(__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].storeNames.books, { keyPath: "title" });
+    __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Table created with the name '" + __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].storeNames.books + "'");
 
     // Define the columns. This would help in better UI. Splitting the object to sort or search
     let bookTitle = store.createIndex("by_title", "title", { unique: true });
@@ -1001,10 +1003,10 @@ document.querySelector('#createDB').addEventListener('click', () => {
   };
 
   openRequest.onsuccess = e => {
-    __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Database successfully created / opened");
+    __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Database successfully created / opened");
   };
 
-  __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].setDefaultErrorHandling(openRequest);
+  __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].setDefaultErrorHandling(openRequest);
 });
 
 document.querySelector('#readDB').addEventListener('click', () => {
@@ -1014,23 +1016,23 @@ document.querySelector('#readDB').addEventListener('click', () => {
   }
 
   // Use transaction to read the database
-  let transaction = __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books], "readonly");
-  let objectStore = transaction.objectStore(__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books);
+  let transaction = __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].storeNames.books], "readonly");
+  let objectStore = transaction.objectStore(__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].storeNames.books);
   // Use openCursor to read a stream of data.
   let cursor = objectStore.openCursor();
   clearKeyContainer();
 
   cursor.onsuccess = e => {
     let result = e.target.result;
-    __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Reading Database");
+    __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Reading Database");
     if (result) {
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Name of the book: " + result.value.title);
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("author of the book: " + result.value.author);
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("type of the book: " + result.value.type);
+      __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Name of the book: " + result.value.title);
+      __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("author of the book: " + result.value.author);
+      __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("type of the book: " + result.value.type);
       updateKeyContainer(result.value);
       result.continue();
     } else {
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("No more records");
+      __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("No more records");
     }
   };
 });
@@ -1040,23 +1042,23 @@ document.querySelector('#deleteDB').addEventListener('click', () => {
     return;
   }
 
-  __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Deleting Database");
+  __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Deleting Database");
   openRequest.result.close();
-  let deleteRequest = indexedDB.deleteDatabase(__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].databaseName);
+  let deleteRequest = indexedDB.deleteDatabase(__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].databaseName);
 
   // OnBlocked for some reason, database could not be deleted
-  __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].setDefaultErrorHandling(openRequest);
+  __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].setDefaultErrorHandling(openRequest);
 
-  deleteRequest.onsuccess = __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]("Database deleted successfully");
+  deleteRequest.onsuccess = __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]("Database deleted successfully");
 
-  __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance = {};
+  __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].instance = {};
   openRequest = undefined;
   clearKeyContainer();
 });
 
 // Clearing the logs from html
 document.querySelector('#clear-logger').addEventListener('click', () => {
-  __WEBPACK_IMPORTED_MODULE_2__logger__["a" /* clearLogger */]();
+  __WEBPACK_IMPORTED_MODULE_3__logger__["a" /* clearLogger */]();
 });
 
 document.querySelector('#addDB').addEventListener('click', () => {
@@ -1065,19 +1067,19 @@ document.querySelector('#addDB').addEventListener('click', () => {
     return;
   }
 
-  __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]('Database adding started');
+  __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]('Database adding started');
   let bookObject = {
     title: document.querySelector('[name="title"]').value,
     author: document.querySelector('[name="author"]').value,
     type: document.querySelector('[name="type"]').value
   };
 
-  let transaction = __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books], "readwrite");
+  let transaction = __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].storeNames.books], "readwrite");
   let objectStore = transaction.objectStore("books");
   objectStore.add(bookObject);
   updateKeyContainer(bookObject);
 
-  __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]('Database adding completed');
+  __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]('Database adding completed');
   document.forms['addDBForm'].reset();
 });
 
@@ -1087,12 +1089,12 @@ let populateDatabase = data => {
     return;
   }
 
-  __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */]('Database adding started');
+  __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */]('Database adding started');
 
   data.books.forEach(datum => {
     // Use transaction to read the database
-    let transaction = __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books], "readwrite");
-    let objectStore = transaction.objectStore(__WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].storeNames.books);
+    let transaction = __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].instance.transaction([__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].storeNames.books], "readwrite");
+    let objectStore = transaction.objectStore(__WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].storeNames.books);
     let bookObject = {
       title: datum.title,
       author: datum.author,
@@ -1102,16 +1104,16 @@ let populateDatabase = data => {
     objectStore.add(bookObject);
 
     transaction.oncomplete = datum => {
-      __WEBPACK_IMPORTED_MODULE_2__logger__["b" /* updateLogger */](bookObject.title + ' is added to database');
+      __WEBPACK_IMPORTED_MODULE_3__logger__["b" /* updateLogger */](bookObject.title + ' is added to database');
       updateKeyContainer(bookObject);
     };
 
-    __WEBPACK_IMPORTED_MODULE_1__databaseConfig__["a" /* default */].setDefaultErrorHandling(transaction);
+    __WEBPACK_IMPORTED_MODULE_2__databaseConfig__["a" /* default */].setDefaultErrorHandling(transaction);
   });
 };
 
 document.querySelector('#populateAjax').addEventListener('click', () => {
-  __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('api/books.json').then(res => {
+  __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(__WEBPACK_IMPORTED_MODULE_1__path__["a" /* default */].apiPath + 'books.json').then(res => {
     console.log("data is ", res.data);
     populateDatabase(res.data);
   });
@@ -2012,6 +2014,21 @@ module.exports = function spread(callback) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+let basePath = window.location.hostname === 'jagatjeevan.github.io/' ? 'indexDBSpike/dist/' : '/';
+let apiPath = basePath + 'dist/api/';
+
+const path = {
+  basePath,
+  apiPath
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (path);
+
+/***/ }),
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 var _this = this;
 
 let dbConfig = {
@@ -2039,7 +2056,7 @@ let dbConfig = {
 /* harmony default export */ __webpack_exports__["a"] = (dbConfig);
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2060,7 +2077,7 @@ let clearLogger = () => {
 };
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

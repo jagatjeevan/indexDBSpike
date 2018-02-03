@@ -1,3 +1,4 @@
+import axios from 'axios';
 import dataBaseConfig from './databaseConfig';
 import * as logStatement from './logger';
 import '../styles/style.scss';
@@ -12,6 +13,16 @@ let isDatabasePresent = (openRequest) => {
 
   return true;
 }
+
+let clearKeyContainer = () => {
+  document.querySelector('#database-key-container').innerHTML = '';
+};
+
+let updateKeyContainer = bookObject => {
+  let htmlObject = document.createElement('label');
+  htmlObject.innerText = bookObject.title;
+  document.querySelector('#database-key-container').append(htmlObject);
+};
 
 // Create Database
 document.querySelector('#createDB').addEventListener('click', () => {
@@ -30,13 +41,17 @@ document.querySelector('#createDB').addEventListener('click', () => {
     let bookTitle = store.createIndex("by_title", "title", { unique: true });
     let bookAuthor = store.createIndex("by_author", "author");
     let bookType = store.createIndex("by_type", "type");
-    
-    // Adding initial values to the table. You can use "store.put({...})" or "transaction"
-    store.put({
+
+    let initialDatabaseValue = {
       title: "Merchant of Venice",
       author: "William Shakespear",
       type: "Drama"
-    });
+    };
+    
+    // Adding initial values to the table. You can use "store.put({...})" or "transaction"
+    store.put(initialDatabaseValue);
+
+    updateKeyContainer(initialDatabaseValue);
   }
 
   openRequest.onsuccess = (e) => {
@@ -58,14 +73,16 @@ document.querySelector('#readDB').addEventListener('click', () => {
   let objectStore = transaction.objectStore(dataBaseConfig.storeNames.books);
   // Use openCursor to read a stream of data.
   let cursor = objectStore.openCursor();
+  clearKeyContainer();
 
   cursor.onsuccess = (e) => {
     let result = e.target.result;
     logStatement.updateLogger("Reading Database");
     if(result) {
-      logStatement.updateLogger("Name of the book: " + result.key);
+      logStatement.updateLogger("Name of the book: " + result.value.title);
       logStatement.updateLogger("author of the book: " + result.value.author);
       logStatement.updateLogger("type of the book: " + result.value.type);
+      updateKeyContainer(result.value);
       result.continue();
     } else {
       logStatement.updateLogger("No more records");
@@ -90,6 +107,7 @@ document.querySelector('#deleteDB').addEventListener('click', () => {
 
   dataBaseConfig.instance = {};
   openRequest = undefined;
+  clearKeyContainer();
 
 });
 
@@ -114,6 +132,44 @@ document.querySelector('#addDB').addEventListener('click', () => {
   let transaction = dataBaseConfig.instance.transaction([dataBaseConfig.storeNames.books], "readwrite");
   let objectStore = transaction.objectStore("books");
   objectStore.add(bookObject);
+  updateKeyContainer(bookObject);
 
   logStatement.updateLogger('Database adding completed');
+  document.forms['addDBForm'].reset();
+});
+
+let populateDatabase = data => {
+  // Check if the database is present
+  if (!isDatabasePresent(openRequest)) {
+    return;
+  }
+
+  logStatement.updateLogger('Database adding started');
+
+  data.books.forEach(datum => {
+    // Use transaction to read the database
+    let transaction = dataBaseConfig.instance.transaction([dataBaseConfig.storeNames.books], "readwrite");
+    let objectStore = transaction.objectStore(dataBaseConfig.storeNames.books);
+    let bookObject = {
+      title: datum.title,
+      author: datum.author,
+      type: datum.type
+    };
+
+    objectStore.add(bookObject);
+
+    transaction.oncomplete = datum => {
+      logStatement.updateLogger(bookObject.title + ' is added to database');
+      updateKeyContainer(bookObject);
+    };
+
+    dataBaseConfig.setDefaultErrorHandling(transaction);
+  });
+};
+
+document.querySelector('#populateAjax').addEventListener('click', () => {
+  axios.get('api/books.json').then(res => {
+    console.log("data is ", res.data);
+    populateDatabase(res.data);
+  });
 });

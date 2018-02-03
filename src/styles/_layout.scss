@@ -5,10 +5,6 @@
 .menu {
   width: 50%;
   margin-right: 30px;
-
-  .addDBButton {
-    float: right;
-  }
 }
 
 label.form {
@@ -17,11 +13,18 @@ label.form {
   padding: 10px;
 }
 
-.form span {
-  width: 200px;
+.form {
+  span {
+    width: 200px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+  }
 }
 
-.form input {
-  width: 100%;
-  padding: 10px;
+.form-action-container {
+  display: flex;
+  justify-content: flex-end;
 }

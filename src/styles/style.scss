@@ -3,10 +3,14 @@
 $app-border-color: #ededed;
 $app-border: $app-border-color solid 1px;
 
+$app-button-background: rgb(216, 216, 216);
+
+$app-spacer: 10px;
+
 .logger-container {
   align-items: baseline;
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 2 * $app-spacer;
 }
 
 .logger-container button {
@@ -15,30 +19,38 @@ $app-border: $app-border-color solid 1px;
 
 .logger {
   border: $app-border;
-  margin-right: 10px;
+  margin-right: $app-spacer;
   max-height: 300px;
   min-height: 100px;
   min-width: 450px;
   overflow: auto;
-  padding: 10px;
+  padding: $app-spacer;
 }
 
 .logger > div {
   border-bottom: $app-border;
   margin-bottom: 5px;
-  padding: 10px;
-}
-
-.logger > div b{
-  margin-right: 10px;
+  padding: $app-spacer;
+  
+  b{
+    margin-right: $app-spacer;
+  }
 }
 
 button,
 input[type="submit"],
+input[type="reset"],
 input[type="button"] {
   font-size: 13px;
-  margin: 10px 10px 0 0;
-  padding: 10px 20px;
+  margin: $app-spacer $app-spacer 0 0;
+  padding: $app-spacer 2*$app-spacer;
   text-shadow: 2px 1px 2px rgba(196, 190, 180, 1);
-  background: rgb(216, 216, 216);
+  background: $app-button-background;
+}
+
+#database-key-container label {
+  background: $app-button-background;
+  border-radius: 3px;
+  padding: $app-spacer;
+  margin: $app-spacer;
 }

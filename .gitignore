@@ -1,4 +1,4 @@
-dist
+dist/
 node_modules
 indexedDB.js
 *.js.map

@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
   entry: {
@@ -36,7 +37,10 @@ const config = {
   },
 
   plugins: [
-    new ExtractTextPlugin("style.css")
+    new ExtractTextPlugin("style.css"),
+    new CopyWebpackPlugin([
+      { from: 'src/api/', to: 'api' }
+    ])
   ],
 
   devServer: {

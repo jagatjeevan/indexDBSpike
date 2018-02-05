@@ -8,6 +8,12 @@ export let updateLogger = (dataString) => {
   loggerElement.appendChild(childNode);
 }
 
+export let bookObjectLogger = (bookObject) => {
+  updateLogger("Name of the book: " + result.value.title);
+  updateLogger("author of the book: " + result.value.author);
+  updateLogger("type of the book: " + result.value.type);
+};
+
 export let clearLogger = () => {
   loggerElement.innerHTML = "";
 }

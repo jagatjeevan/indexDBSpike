@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>IndexedDB</title>
   <link rel="stylesheet" href="dist/style.css" />
+  <script src="dist/app.js" defer="defer"></script>
 </head>
 <body>
 
@@ -22,7 +23,10 @@
         <span>Type of the book: </span>
         <input type="text" class="form-input" name="type" />
       </label>
-      <input type="submit" value="Add to Database" id="addDB" class="addDBButton" />
+      <div class="form-action-container">
+        <input type="submit" value="Add to Database" id="addDB" />
+        <input type="reset" value="Reset" />
+      </div>
     </form>
     <div class="status">
       <div class="logger-container">
@@ -33,15 +37,12 @@
       <button id="createDB">Create / Open Database</button>
       <button id="deleteDB">Delete Database</button>
       <button id="readDB">Read Database</button>
-      <button id="readFirstDB">Read First Record in Database</button>
       <button id="populateAjax">Fetch records and populate Database</button>
     </div>
   </div>
 
   <p>The Database has the below records : </p>
   <div class="container" id="database-key-container"></div>
-
-  <script src="dist/app.js"></script>
 
 </body>
 </html>

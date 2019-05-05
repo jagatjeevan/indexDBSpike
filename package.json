@@ -7,7 +7,9 @@
     "clean": "rm -rf dist",
     "build": "webpack",
     "build:watch": "webpack --watch",
-    "prebuild": "npm run clean"
+    "prebuild": "npm run clean",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,8 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
-    "axios": "^0.17.1"
-  }
+    "axios": "^0.17.1",
+    "snyk": "^1.161.1"
+  },
+  "snyk": true
 }
